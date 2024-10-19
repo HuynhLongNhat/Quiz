@@ -14,7 +14,7 @@ const HomePage = () => {
           forms designed to be refreshingly different.
         </div>
         <div className="title-3">
-          <button>Get started-it's free</button>
+          <button>Get started-it&apos;s free</button>
         </div>
       </div>
     </div>
