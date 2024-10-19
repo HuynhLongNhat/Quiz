@@ -23,7 +23,6 @@
     "react-toastify": "^10.0.6",
     "redux": "^5.0.1",
     "redux-thunk": "^3.1.0",
-    "sass": "^1.80.3",
     "web-vitals": "^4.2.3"
   },
   "devDependencies": {
@@ -36,6 +35,9 @@
     "eslint-plugin-react-hooks": "^5.1.0-rc.0",
     "eslint-plugin-react-refresh": "^0.4.12",
     "globals": "^15.9.0",
-    "vite": "^5.4.8"
+    "sass": "^1.80.3",
+    "sass-loader": "^13.0.0",
+    "vite": "^5.4.8",
+    "webpack": "^5.95.0"
   }
 }
