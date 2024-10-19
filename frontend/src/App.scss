@@ -1,20 +1,83 @@
 #root {
-  
-  margin: 0 ;
+  margin: 0;
   padding: 0;
   box-sizing: border-box;
-  
 }
 
+@media (min-width: 1350px) {
+  .container,
+  .container-lg,
+  .container-md,
+  .container-sm,
+  .container-xl {
+    max-width: 1300px !important;
+  }
+}
 .app-container {
-  .header-container { 
-    .navbar-nav  {
-      .nav-link{ 
-        &.active  {
-          color: rgb(2, 209, 245);
+  .header-container {
+    .btn-login {
+      border-radius: 5px;
+      margin-right: 15px;
+      padding: 0 15px;
+      border: 1px solid #535353;
+      height: 40px;
+    }
+    .btn-signup {
+      border-radius: 5px;
+      background: #303030;
+      padding: 0 15px;
+      color: white;
+      height: 40px;
+      &:hover {
+        background: black;
+      }
+    }
+  }
+  .navbar {
+    padding-top: 20px;
+    z-index: 10;
+    background-color: rgba(0, 0, 0, 0) !important;
+    .nav-link {
+      &.active {
+        color: rgb(2, 209, 245);
+      }
+    }
+  }
 
+  .homepage-container {
+    .homepage-content {
+      padding: 100px;
+      width: 50%;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+      .title-1 {
+        font-size: 60px;
+        line-height: 60px;
+      }
+      .title-2 {
+        font-size: 24px;
+        line-height: 30px;
+      }
+      .title-3 {
+        button {
+          border-radius: 5px;
+          background: #303030;
+          padding: 0 15px;
+          color: white;
+          height: 40px;
+          &:hover {
+            background: black;
+          }
         }
       }
     }
   }
+}
+
+video {
+  position: fixed;
+  bottom: 0;
+  width: 100vw;
 }
