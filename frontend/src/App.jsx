@@ -1,13 +1,14 @@
 
 import './App.scss'
-
-function App() {
+import Header from './components/Header/Header'
+import { Link } from 'react-router-dom'
+const App =() => {
 
 
   return (
     <>
   <div>
-     Hello world
+   <Header/>
     </div>
     </>
   )
