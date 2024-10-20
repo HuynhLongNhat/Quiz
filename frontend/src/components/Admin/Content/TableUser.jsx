@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 const TableUser = (props) => {
   // eslint-disable-next-line react/prop-types
-  const { listUsers } = props;
+  const { listUsers, handleEditUser, handleViewUser } = props;
 
   return (
     <div>
@@ -31,8 +31,18 @@ const TableUser = (props) => {
                   <td>{item.role}</td>
                   <td>
                     <div className="d-flex flex-wrap justify-content-center gap-2">
-                      <button className="btn btn-info">Detail</button>
-                      <button className="btn btn-primary">Edit</button>
+                      <button
+                        className="btn btn-info"
+                        onClick={() => handleViewUser(item)}
+                      >
+                        Detail
+                      </button>
+                      <button
+                        className="btn btn-primary"
+                        onClick={() => handleEditUser(item)}
+                      >
+                        Edit
+                      </button>
                       <button className="btn btn-danger">Delete</button>
                     </div>
                   </td>

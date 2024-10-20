@@ -11,6 +11,18 @@ export const postCreateNewUser = ( email , password , username , role , image) =
       data
     );
 }
+export const putUpdateUser = (id , username , role , image) => {
+    const data = new FormData();
+    data.append("id", id);
+    data.append("username", username);
+    data.append("role", role);
+    data.append("userImage", image);
+       return  axiosCutomize.put(
+      "/participant",
+      data
+    );
+}
+
 
 export const getListUser = () =>{
      return  axiosCutomize.get(

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import ModalCreateUser from "./ModalCreateUser";
+import ModalUser from "./ModalUser";
 import "./ManageUser.scss";
 import { FaCirclePlus } from "react-icons/fa6";
 import TableUser from "./TableUser";
@@ -8,6 +8,9 @@ import { toast } from "react-toastify";
 const ManageUser = () => {
   const [show, setShow] = useState(false);
   const [listUsers, setListUsers] = useState();
+  const [isUpdate, setIsUpdate] = useState(false);
+  const [isView, setIsView] = useState(false);
+  const [userData, setUserData] = useState(null);
   useEffect(() => {
     GetAllListUser();
   }, []);
@@ -21,25 +24,49 @@ const ManageUser = () => {
     }
   };
 
-  const handleShow = () => setShow(true);
+  const handleCreateUser = () => {
+    setIsUpdate(false);
+    setIsView(false);
+    setUserData(null);
+    setShow(true);
+  };
+  const handleEditUser = (user) => {
+    setIsUpdate(true);
+    setUserData(user);
+    setShow(true);
+  };
+
+  const handleViewUser = (user) => {
+    setIsView(true);
+    console.log(" user view", user);
+    setUserData(user);
+    setShow(true);
+  };
   const handleClose = () => setShow(false);
   return (
     <div className="manange-user-container">
       <div className="title">Manage User</div>
       <div className="users-content">
         <div className="btn-add-new">
-          <button className="btn btn-primary" onClick={handleShow}>
+          <button className="btn btn-primary" onClick={handleCreateUser}>
             <FaCirclePlus /> Add new users
           </button>
         </div>
 
         <div className="table-users-container">
-          <TableUser listUsers={listUsers} />
+          <TableUser
+            listUsers={listUsers}
+            handleEditUser={handleEditUser}
+            handleViewUser={handleViewUser}
+          />
         </div>
-        <ModalCreateUser
+        <ModalUser
           fetchListUser={GetAllListUser}
           show={show}
           handleClose={handleClose}
+          isUpdate={isUpdate}
+          userData={userData}
+          isView={isView}
         />
       </div>
     </div>

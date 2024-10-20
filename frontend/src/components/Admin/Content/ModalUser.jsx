@@ -1,12 +1,13 @@
 /* eslint-disable react/prop-types */
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import { FaCirclePlus } from "react-icons/fa6";
 import { toast } from "react-toastify";
-import { postCreateNewUser } from "../../../services/apiService";
-const ModalCreateUser = (props) => {
-  const { show, handleClose, fetchListUser } = props;
+import { postCreateNewUser, putUpdateUser } from "../../../services/apiService";
+const ModalUser = (props) => {
+  const { show, handleClose, fetchListUser, isUpdate, isView, userData } =
+    props;
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -23,6 +24,25 @@ const ModalCreateUser = (props) => {
     setImage(null);
     setPreviewImage("");
   };
+
+  // Khi mở modal ở chế độ cập nhật, fill thông tin người dùng
+  useEffect(() => {
+    if ((isUpdate || isView) && userData) {
+      setEmail(userData.email);
+      setPassword(userData.password);
+      setUsername(userData.username);
+      setRole(userData.role || "USER");
+      setImage(userData.image);
+      if (userData.image) {
+        setPreviewImage(`data:image/jpeg;base64,${userData.image}`);
+      } else {
+        setPreviewImage(null);
+      }
+    } else {
+      resetData();
+    }
+  }, [isUpdate, isView, userData]);
+
   const handleUploadImage = (e) => {
     if (e.target && e.target.files && e.target.files[0]) {
       //convert ảnh thành dạng blob
@@ -32,41 +52,49 @@ const ModalCreateUser = (props) => {
       setPreviewImage("");
     }
   };
-  const validateEmail = (email) => {
-    return String(email)
-      .toLowerCase()
-      .match(
-        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-      );
-  };
+  // const validateEmail = (email) => {
+  //   return String(email)
+  //     .toLowerCase()
+  //     .match(
+  //       /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+  //     );
+  // };
   const handleSumbit = async () => {
     //validate
-    const isValidEmail = validateEmail(email);
-    if (!email) {
-      toast.error("Email is required");
-      return;
-    }
-    if (!isValidEmail) {
-      toast.error("Invalid email");
-      return;
-    }
-    if (!password) {
-      toast.error("Password is required");
-      return;
-    }
-    if (!username) {
-      toast.error("Username is required");
-      return;
-    }
-    if (!image) {
-      toast.error("Image is required");
-      return;
-    }
+    // const isValidEmail = validateEmail(email);
+    // if (!email) {
+    //   toast.error("Email is required");
+    //   return;
+    // }
+    // if (!isValidEmail) {
+    //   toast.error("Invalid email");
+    //   return;
+    // }
+    // if (!password) {
+    //   toast.error("Password is required");
+    //   return;
+    // }
+    // if (!username) {
+    //   toast.error("Username is required");
+    //   return;
+    // }
+    // if (!image) {
+    //   toast.error("Image is required");
+    //   return;
+    // }
 
     //call apis
 
-    let data = await postCreateNewUser(email, password, username, role, image);
-    console.log(data);
+    // Gọi API (tạo mới hoặc cập nhật)
+    let data;
+    if (isUpdate) {
+      // Gọi API để cập nhật
+      data = await putUpdateUser(userData.id, username, role, image);
+    } else {
+      // Gọi API để tạo mới
+      data = await postCreateNewUser(email, password, username, role, image);
+    }
+
     if (data && data.EC === 0) {
       toast.success(data.EM);
       resetData();
@@ -86,34 +114,41 @@ const ModalCreateUser = (props) => {
         className="modal-add-user"
       >
         <Modal.Header closeButton>
-          <Modal.Title>Add new user</Modal.Title>
+          <Modal.Title>
+            {isUpdate ? "Update user" : isView ? "View user" : "Add new user"}
+          </Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <form className="row g-3">
-            <div className="col-md-6">
-              <label className="form-label">Email</label>
-              <input
-                type="email"
-                className="form-control"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </div>
-            <div className="col-md-6">
-              <label className="form-label">Password</label>
-              <input
-                type="password"
-                className="form-control"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </div>
+            <>
+              <div className="col-md-6">
+                <label className="form-label">Email</label>
+                <input
+                  type="email"
+                  className="form-control"
+                  disabled={isUpdate || isView}
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </div>
+              <div className="col-md-6">
+                <label className="form-label">Password</label>
+                <input
+                  type="password"
+                  className="form-control"
+                  disabled={isUpdate || isView}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+              </div>
+            </>
 
             <div className="col-md-6">
               <label className="form-label">Username</label>
               <input
                 type="text"
                 className="form-control"
+                disabled={isView}
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
               />
@@ -125,6 +160,7 @@ const ModalCreateUser = (props) => {
               <select
                 id="inputState"
                 className="form-select"
+                disabled={isView}
                 value={role}
                 onChange={(e) => setRole(e.target.value)}
               >
@@ -142,6 +178,7 @@ const ModalCreateUser = (props) => {
               <input
                 type="file"
                 hidden
+                disabled={isView}
                 className="form-control"
                 id="file-upload"
                 onChange={(e) => handleUploadImage(e)}
@@ -161,7 +198,7 @@ const ModalCreateUser = (props) => {
             Close
           </Button>
           <Button variant="primary" onClick={() => handleSumbit()}>
-            Save
+            {isUpdate ? "Update" : "Create"}
           </Button>
         </Modal.Footer>
       </Modal>
@@ -169,4 +206,4 @@ const ModalCreateUser = (props) => {
   );
 };
 
-export default ModalCreateUser;
+export default ModalUser;
