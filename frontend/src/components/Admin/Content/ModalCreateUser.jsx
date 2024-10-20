@@ -2,7 +2,7 @@
 import { useState } from "react";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
-
+import axios from "axios";
 import { FaCirclePlus } from "react-icons/fa6";
 const ModalCreateUser = (props) => {
   const { show, handleClose } = props;
@@ -14,6 +14,14 @@ const ModalCreateUser = (props) => {
   const [image, setImage] = useState("");
   const [previewImage, setPreviewImage] = useState("");
 
+  const resetData = () => {
+    setEmail("");
+    setPassword("");
+    setUsername("");
+    setRole("USER");
+    setImage(null);
+    setPreviewImage("");
+  };
   const handleUploadImage = (e) => {
     if (e.target && e.target.files && e.target.files[0]) {
       //convert ảnh thành dạng blob
@@ -21,6 +29,26 @@ const ModalCreateUser = (props) => {
       setImage(e.target.files[0]);
     } else {
       setPreviewImage("");
+    }
+  };
+  const handleSumbit = async () => {
+    //validate
+
+    //call apis
+
+    const data = new FormData();
+    data.append("email", email);
+    data.append("password", password);
+    data.append("username", username);
+    data.append("role", role);
+    data.append("userImage", image);
+    let res = await axios.post(
+      "http://localhost:8081/api/v1/participant",
+      data
+    );
+    if (res) {
+      resetData();
+      handleClose();
     }
   };
   return (
@@ -76,7 +104,7 @@ const ModalCreateUser = (props) => {
                 onChange={(e) => setRole(e.target.value)}
               >
                 <option>Choose...</option>
-                <option selected value="USER">
+                <option defaultValue value="USER">
                   USER
                 </option>
                 <option value="ADMIN">ADMIN</option>
@@ -107,7 +135,7 @@ const ModalCreateUser = (props) => {
           <Button variant="secondary" onClick={handleClose}>
             Close
           </Button>
-          <Button variant="primary" onClick={handleClose}>
+          <Button variant="primary" onClick={() => handleSumbit()}>
             Save
           </Button>
         </Modal.Footer>
