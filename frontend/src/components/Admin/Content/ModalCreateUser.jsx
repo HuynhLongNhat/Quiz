@@ -4,6 +4,7 @@ import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import axios from "axios";
 import { FaCirclePlus } from "react-icons/fa6";
+import { toast } from "react-toastify";
 const ModalCreateUser = (props) => {
   const { show, handleClose } = props;
 
@@ -31,8 +32,36 @@ const ModalCreateUser = (props) => {
       setPreviewImage("");
     }
   };
+  const validateEmail = (email) => {
+    return String(email)
+      .toLowerCase()
+      .match(
+        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+      );
+  };
   const handleSumbit = async () => {
     //validate
+    const isValidEmail = validateEmail(email);
+    if (!email) {
+      toast.error("Email is required");
+      return;
+    }
+    if (!isValidEmail) {
+      toast.error("Invalid email");
+      return;
+    }
+    if (!password) {
+      toast.error("Password is required");
+      return;
+    }
+    if (!username) {
+      toast.error("Username is required");
+      return;
+    }
+    if (!image) {
+      toast.error("Image is required");
+      return;
+    }
 
     //call apis
 
@@ -46,9 +75,13 @@ const ModalCreateUser = (props) => {
       "http://localhost:8081/api/v1/participant",
       data
     );
-    if (res) {
+    console.log(res);
+    if (res.data && res.data.EC === 0) {
+      toast.success(res.data.EM);
       resetData();
       handleClose();
+    } else {
+      toast.error(res.data.EM);
     }
   };
   return (
