@@ -2,6 +2,7 @@ import { useState } from "react";
 import ModalCreateUser from "./ModalCreateUser";
 import "./ManageUser.scss";
 import { FaCirclePlus } from "react-icons/fa6";
+import TableUser from "./TableUser";
 const ManageUser = () => {
   const [show, setShow] = useState(false);
 
@@ -17,7 +18,9 @@ const ManageUser = () => {
           </button>
         </div>
 
-        <div className="table-users-container">table user</div>
+        <div className="table-users-container">
+          <TableUser />
+        </div>
         <ModalCreateUser show={show} handleClose={handleClose} />
       </div>
     </div>

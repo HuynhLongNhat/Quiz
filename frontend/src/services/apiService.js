@@ -11,3 +11,9 @@ export const postCreateNewUser = ( email , password , username , role , image) =
       data
     );
 }
+
+export const getListUser = () =>{
+     return  axiosCutomize.get(
+      "/participant/all"
+    );
+}
