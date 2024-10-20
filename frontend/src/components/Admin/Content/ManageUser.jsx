@@ -1,5 +1,6 @@
 import { useState } from "react";
 import ModalCreateUser from "./ModalCreateUser";
+import "./ManageUser.scss";
 const ManageUser = () => {
   const [show, setShow] = useState(false);
 
@@ -12,10 +13,10 @@ const ManageUser = () => {
         <div className="users-content">
           <div>
             <button onClick={handleShow}>Add new users</button>
-            <ModalCreateUser show={show} handleClose={handleClose} />
           </div>
 
           <div>table user</div>
+          <ModalCreateUser show={show} handleClose={handleClose} />
         </div>
       </div>
     </div>
