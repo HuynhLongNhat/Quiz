@@ -1,10 +1,25 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ModalCreateUser from "./ModalCreateUser";
 import "./ManageUser.scss";
 import { FaCirclePlus } from "react-icons/fa6";
 import TableUser from "./TableUser";
+import { getListUser } from "../../../services/apiService";
+import { toast } from "react-toastify";
 const ManageUser = () => {
   const [show, setShow] = useState(false);
+  const [listUsers, setListUsers] = useState();
+  useEffect(() => {
+    GetAllListUser();
+  }, []);
+
+  const GetAllListUser = async () => {
+    let res = await getListUser();
+    if (res && res.EC === 0) {
+      setListUsers(res.DT);
+    } else {
+      toast.error(res.EM);
+    }
+  };
 
   const handleShow = () => setShow(true);
   const handleClose = () => setShow(false);
@@ -19,9 +34,13 @@ const ManageUser = () => {
         </div>
 
         <div className="table-users-container">
-          <TableUser />
+          <TableUser listUsers={listUsers} />
         </div>
-        <ModalCreateUser show={show} handleClose={handleClose} />
+        <ModalCreateUser
+          fetchListUser={GetAllListUser}
+          show={show}
+          handleClose={handleClose}
+        />
       </div>
     </div>
   );

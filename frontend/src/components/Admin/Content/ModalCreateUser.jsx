@@ -6,7 +6,7 @@ import { FaCirclePlus } from "react-icons/fa6";
 import { toast } from "react-toastify";
 import { postCreateNewUser } from "../../../services/apiService";
 const ModalCreateUser = (props) => {
-  const { show, handleClose } = props;
+  const { show, handleClose, fetchListUser } = props;
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -71,6 +71,7 @@ const ModalCreateUser = (props) => {
       toast.success(data.EM);
       resetData();
       handleClose();
+      await fetchListUser();
     } else {
       toast.error(data.EM);
     }

@@ -1,21 +1,8 @@
-import { useEffect, useState } from "react";
-import { getListUser } from "../../../services/apiService";
-import { toast } from "react-toastify";
-const TableUser = () => {
-  const [listUsers, setListUsers] = useState();
+/* eslint-disable react/prop-types */
+const TableUser = (props) => {
+  // eslint-disable-next-line react/prop-types
+  const { listUsers } = props;
 
-  useEffect(() => {
-    GetAllListUser();
-  }, []);
-
-  const GetAllListUser = async () => {
-    let res = await getListUser();
-    if (res && res.EC === 0) {
-      setListUsers(res.DT);
-    } else {
-      toast.error(res.EM);
-    }
-  };
   return (
     <div>
       <table className="table table-light table-hover">
@@ -32,7 +19,9 @@ const TableUser = () => {
         </thead>
         <tbody>
           {listUsers &&
+            // eslint-disable-next-line react/prop-types
             listUsers.length > 0 &&
+            // eslint-disable-next-line react/prop-types
             listUsers.map((item, index) => {
               return (
                 <tr key={`table-user-${index}`}>
