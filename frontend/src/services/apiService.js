@@ -22,6 +22,12 @@ export const putUpdateUser = (id , username , role , image) => {
       data
     );
 }
+ export const deleteUser = (userId ) =>{ 
+      return  axiosCutomize.delete(
+      "/participant",
+    {data: {id: userId} }
+    );
+ }
 
 
 export const getListUser = () =>{

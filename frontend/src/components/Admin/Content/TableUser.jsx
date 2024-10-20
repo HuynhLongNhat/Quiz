@@ -1,8 +1,7 @@
 /* eslint-disable react/prop-types */
 const TableUser = (props) => {
   // eslint-disable-next-line react/prop-types
-  const { listUsers, handleEditUser, handleViewUser } = props;
-
+  const { listUsers, handleEditUser, handleViewUser, handleDeleteUser } = props;
   return (
     <div>
       <table className="table table-light table-hover">
@@ -43,7 +42,12 @@ const TableUser = (props) => {
                       >
                         Edit
                       </button>
-                      <button className="btn btn-danger">Delete</button>
+                      <button
+                        className="btn btn-danger"
+                        onClick={() => handleDeleteUser(item)}
+                      >
+                        Delete
+                      </button>
                     </div>
                   </td>
                 </tr>

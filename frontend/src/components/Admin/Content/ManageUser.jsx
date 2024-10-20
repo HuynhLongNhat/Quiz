@@ -5,10 +5,12 @@ import { FaCirclePlus } from "react-icons/fa6";
 import TableUser from "./TableUser";
 import { getListUser } from "../../../services/apiService";
 import { toast } from "react-toastify";
+import ModalConfirmDelete from "./ModalConfirmDelete";
 const ManageUser = () => {
   const [show, setShow] = useState(false);
   const [listUsers, setListUsers] = useState();
   const [isUpdate, setIsUpdate] = useState(false);
+  const [isShowModalConfirm, setShowModalConfirm] = useState(false);
   const [isView, setIsView] = useState(false);
   const [userData, setUserData] = useState(null);
   useEffect(() => {
@@ -24,6 +26,13 @@ const ManageUser = () => {
     }
   };
 
+  const handleTongleModalConfirm = () => {
+    setShowModalConfirm(!isShowModalConfirm);
+  };
+  const handleDeleteUser = (user) => {
+    handleTongleModalConfirm();
+    setUserData(user);
+  };
   const handleCreateUser = () => {
     setIsUpdate(false);
     setIsView(false);
@@ -58,6 +67,7 @@ const ManageUser = () => {
             listUsers={listUsers}
             handleEditUser={handleEditUser}
             handleViewUser={handleViewUser}
+            handleDeleteUser={handleDeleteUser}
           />
         </div>
         <ModalUser
@@ -67,6 +77,12 @@ const ManageUser = () => {
           isUpdate={isUpdate}
           userData={userData}
           isView={isView}
+        />
+        <ModalConfirmDelete
+          show={isShowModalConfirm}
+          handleClose={handleTongleModalConfirm}
+          userData={userData}
+          fetchListUser={GetAllListUser}
         />
       </div>
     </div>
