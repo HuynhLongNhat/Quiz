@@ -8,9 +8,10 @@ import { toast } from "react-toastify";
 import ModalConfirmDelete from "./ModalConfirmDelete";
 
 const ManageUser = () => {
-  const LIMIT_USER = 2;
+  const LIMIT_USER = 4;
   const [pageCount, setPageCount] = useState(0);
   const [show, setShow] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
   const [listUsers, setListUsers] = useState();
   const [isUpdate, setIsUpdate] = useState(false);
   const [isShowModalConfirm, setShowModalConfirm] = useState(false);
@@ -19,10 +20,10 @@ const ManageUser = () => {
 
   useEffect(() => {
     // GetAllListUser();
-    GetListUserWithPaginate(1);
+    fetchListUserWithPaginate(currentPage);
   }, []);
 
-  const GetAllListUser = async () => {
+  const fetchAllListUser = async () => {
     let res = await getListUser();
     if (res && res.EC === 0) {
       setListUsers(res.DT);
@@ -31,7 +32,7 @@ const ManageUser = () => {
     }
   };
 
-  const GetListUserWithPaginate = async (page) => {
+  const fetchListUserWithPaginate = async (page) => {
     let res = await getUserWithPaginate(page, LIMIT_USER);
     if (res && res.EC === 0) {
       setListUsers(res.DT.users);
@@ -83,23 +84,31 @@ const ManageUser = () => {
             handleEditUser={handleEditUser}
             handleViewUser={handleViewUser}
             handleDeleteUser={handleDeleteUser}
-            fetchListUsersWithPaginate={GetListUserWithPaginate}
+            fetchListUsersWithPaginate={fetchListUserWithPaginate}
             pageCount={pageCount}
+            currentPage={currentPage}
+            setCurrentPage={setCurrentPage}
           />
         </div>
         <ModalUser
-          fetchListUser={GetAllListUser}
+          fetchListUser={fetchAllListUser}
+          fetchListUserWithPaginate={fetchListUserWithPaginate}
           show={show}
           handleClose={handleClose}
           isUpdate={isUpdate}
           userData={userData}
           isView={isView}
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
         />
         <ModalConfirmDelete
           show={isShowModalConfirm}
           handleClose={handleTongleModalConfirm}
           userData={userData}
-          fetchListUser={GetAllListUser}
+          fetchListUserWithPaginate={fetchListUserWithPaginate}
+          fetchListUser={fetchAllListUser}
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
         />
       </div>
     </div>

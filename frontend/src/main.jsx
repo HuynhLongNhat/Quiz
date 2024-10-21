@@ -9,6 +9,7 @@ import Admin from "./components/Admin/Admin.jsx";
 import HomePage from "./components/Home/HomePage.jsx";
 import ManageUser from "./components/Admin/Content/ManageUser.jsx";
 import DashBoard from "./components/Admin/Content/DashBoard.jsx";
+import Login from "./components/Admin/Auth/Login.jsx";
 
 createRoot(document.getElementById("root")).render(
   // <StrictMode>
@@ -22,6 +23,7 @@ createRoot(document.getElementById("root")).render(
         <Route index element={<DashBoard />} />
         <Route path="manage-users" element={<ManageUser />} />
       </Route>
+      <Route path="/login" element={<Login />} />
     </Routes>
   </BrowserRouter>
   // </StrictMode>,

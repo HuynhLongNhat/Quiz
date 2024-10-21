@@ -1,0 +1,23 @@
+.login-container {
+
+    .header {
+        height: 45px;
+        text-align: right;
+    }
+
+    .title {
+        font-size: 25px;
+        padding: 20px 0;
+    }
+
+    .welcome {
+        font-size: 20px;
+        padding: 10px 0;
+    }
+
+    .content-form {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+}

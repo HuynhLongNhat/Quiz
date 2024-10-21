@@ -5,7 +5,15 @@ import { toast } from "react-toastify";
 
 const ModalConfirmDelete = (props) => {
   // eslint-disable-next-line react/prop-types
-  const { show, handleClose, userData, fetchListUser } = props;
+  const {
+    show,
+    handleClose,
+    userData,
+    fetchListUser,
+    fetchListUserWithPaginate,
+
+    setCurrentPage,
+  } = props;
   const confirmDelete = async () => {
     let resDelete = await deleteUser(userData.id);
     console.log(resDelete);
@@ -13,7 +21,8 @@ const ModalConfirmDelete = (props) => {
       toast.success(resDelete.EM);
 
       handleClose();
-      await fetchListUser();
+      await fetchListUserWithPaginate(1);
+      setCurrentPage(1);
     }
   };
   return (
