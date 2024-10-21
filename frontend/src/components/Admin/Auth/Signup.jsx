@@ -1,23 +1,28 @@
 import { useState } from "react";
 // Thêm file CSS để tùy chỉnh
 import { useNavigate } from "react-router-dom";
-import { postLogin } from "../../../services/apiService";
+import { postSignUp } from "../../../services/apiService";
 import { toast } from "react-toastify";
-function Login() {
+function Signup() {
   const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [repassword, setRepassword] = useState("");
 
   const navigate = useNavigate();
 
-  const handleLogin = async (e) => {
+  const handleSignUp = async (e) => {
     e.preventDefault();
-
+    if (password !== repassword) {
+      toast.error("Passwords do not match!");
+      return;
+    }
     try {
-      let res = await postLogin(email, password);
+      let res = await postSignUp(email, username, password);
       console.log(res);
       if (res && +res.EC === 0) {
         toast.success(res.EM);
-        navigate("/");
+        navigate("/login");
       }
       if (res && +res.EC !== 0) {
         toast.error(res.EM);
@@ -28,28 +33,28 @@ function Login() {
   };
 
   return (
-    <div className="login-container">
+    <div className="my-5">
       <div className="container d-flex flex-column justify-content-center align-items-center vh-100">
         <div className="text-end w-100">
-          <span>Don&apos;t have an account yet?</span>
+          <span>Already have an account?</span>
 
           <button
             className="btn btn-dark mx-2"
             onClick={() => {
-              navigate("/signup");
+              navigate("/login");
             }}
           >
-            Signup
+            Login
           </button>
         </div>
         <div className="greeting text-center fs-3">Long Nhat</div>
         <div className="welcome text-center mt-2 mb-4">
-          Hello, who&apos;s this?
+          Welcome, create your account
         </div>
 
         <div className="card w-50 p-4 shadow-lg">
           <div className="card-body">
-            <h3 className="text-center mb-4">Login</h3>
+            <h3 className="text-center mb-4">Sign Up</h3>
             <form>
               <div className="mb-3">
                 <label htmlFor="email" className="form-label">
@@ -65,6 +70,20 @@ function Login() {
                 />
               </div>
               <div className="mb-3">
+                <label htmlFor="username" className="form-label">
+                  Username
+                </label>
+                <input
+                  type="text"
+                  className="form-control"
+                  id="username"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  required
+                />
+              </div>
+
+              <div className="mb-3">
                 <label htmlFor="password" className="form-label">
                   Password
                 </label>
@@ -77,15 +96,26 @@ function Login() {
                   required
                 />
               </div>
-              <div className="my-3 ">
-                <span>Forgot your password?</span>
+              <div className="mb-3">
+                <label htmlFor="repassword" className="form-label">
+                  Re-enter Password
+                </label>
+                <input
+                  type="password"
+                  className="form-control"
+                  id="repassword"
+                  value={repassword}
+                  onChange={(e) => setRepassword(e.target.value)}
+                  required
+                />
               </div>
+
               <div className="d-grid gap-2">
                 <button
                   className="btn btn-dark"
-                  onClick={(e) => handleLogin(e)}
+                  onClick={(e) => handleSignUp(e)}
                 >
-                  Login
+                  SignUp
                 </button>
               </div>
               <div className="my-3 text-center ">
@@ -106,4 +136,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default Signup;

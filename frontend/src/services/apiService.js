@@ -47,3 +47,9 @@ export const getListUser = () =>{
       "/login",{email :email , password :password}
     );
  }
+
+  export const postSignUp =(email ,username, password) =>{
+  return  axiosCutomize.post(
+      "/register",{email :email ,username: username , password :password}
+    );
+ }

@@ -8,6 +8,7 @@ import HomePage from "./components/Home/HomePage.jsx";
 import ManageUser from "./components/Admin/Content/ManageUser.jsx";
 import DashBoard from "./components/Admin/Content/DashBoard.jsx";
 import Login from "./components/Admin/Auth/Login.jsx";
+import SignUp from "./components/Admin/Auth/Signup.jsx";
 
 const Layout = () => {
   return (
@@ -22,6 +23,7 @@ const Layout = () => {
           <Route path="manage-users" element={<ManageUser />} />
         </Route>
         <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<SignUp />} />
       </Routes>
       <ToastContainer
         position="top-right"
