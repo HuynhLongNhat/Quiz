@@ -41,3 +41,9 @@ export const getListUser = () =>{
   
     );
  }
+
+ export const postLogin =(email , password) =>{
+  return  axiosCutomize.post(
+      "/login",{email :email , password :password}
+    );
+ }
