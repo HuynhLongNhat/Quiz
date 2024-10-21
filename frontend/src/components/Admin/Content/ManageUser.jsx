@@ -3,24 +3,39 @@ import ModalUser from "./ModalUser";
 import "./ManageUser.scss";
 import { FaCirclePlus } from "react-icons/fa6";
 import TableUser from "./TableUser";
-import { getListUser } from "../../../services/apiService";
+import { getListUser, getUserWithPaginate } from "../../../services/apiService";
 import { toast } from "react-toastify";
 import ModalConfirmDelete from "./ModalConfirmDelete";
+
 const ManageUser = () => {
+  const LIMIT_USER = 2;
+  const [pageCount, setPageCount] = useState(0);
   const [show, setShow] = useState(false);
   const [listUsers, setListUsers] = useState();
   const [isUpdate, setIsUpdate] = useState(false);
   const [isShowModalConfirm, setShowModalConfirm] = useState(false);
   const [isView, setIsView] = useState(false);
   const [userData, setUserData] = useState(null);
+
   useEffect(() => {
-    GetAllListUser();
+    // GetAllListUser();
+    GetListUserWithPaginate(1);
   }, []);
 
   const GetAllListUser = async () => {
     let res = await getListUser();
     if (res && res.EC === 0) {
       setListUsers(res.DT);
+    } else {
+      toast.error(res.EM);
+    }
+  };
+
+  const GetListUserWithPaginate = async (page) => {
+    let res = await getUserWithPaginate(page, LIMIT_USER);
+    if (res && res.EC === 0) {
+      setListUsers(res.DT.users);
+      setPageCount(res.DT.totalPages);
     } else {
       toast.error(res.EM);
     }
@@ -68,6 +83,8 @@ const ManageUser = () => {
             handleEditUser={handleEditUser}
             handleViewUser={handleViewUser}
             handleDeleteUser={handleDeleteUser}
+            fetchListUsersWithPaginate={GetListUserWithPaginate}
+            pageCount={pageCount}
           />
         </div>
         <ModalUser

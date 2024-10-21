@@ -29,9 +29,15 @@ export const putUpdateUser = (id , username , role , image) => {
     );
  }
 
-
 export const getListUser = () =>{
      return  axiosCutomize.get(
       "/participant/all"
     );
 }
+
+ export const getUserWithPaginate = (page , limit ) =>{ 
+      return  axiosCutomize.get(
+      `/participant?page=${page}&limit=${limit}`,
+  
+    );
+ }
