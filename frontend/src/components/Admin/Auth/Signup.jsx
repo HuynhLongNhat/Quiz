@@ -1,14 +1,15 @@
 import { useState } from "react";
-// Thêm file CSS để tùy chỉnh
+
 import { useNavigate } from "react-router-dom";
-import { postSignUp } from "../../../services/apiService";
+import { useDispatch, useSelector } from "react-redux";
+import { signUpUser } from "../../../store/slices/userSlice";
 import { toast } from "react-toastify";
 function Signup() {
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [repassword, setRepassword] = useState("");
-
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleSignUp = async (e) => {
@@ -18,14 +19,15 @@ function Signup() {
       return;
     }
     try {
-      let res = await postSignUp(email, username, password);
-      console.log(res);
+      let res = await dispatch(
+        signUpUser({ email, username, password })
+      ).unwrap();
+
       if (res && +res.EC === 0) {
-        toast.success(res.EM);
         navigate("/login");
       }
       if (res && +res.EC !== 0) {
-        toast.error(res.EM);
+        navigate("/signup");
       }
     } catch (error) {
       toast.error("An error occurred. Please try again later.");

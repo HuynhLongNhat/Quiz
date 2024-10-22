@@ -15,6 +15,8 @@ const TableUser = (props) => {
 
   const handlePageClick = (event) => {
     fetchListUsersWithPaginate(+event.selected + 1);
+    setCurrentPage(1);
+
     setCurrentPage(+event.selected + 1);
   };
 

@@ -3,45 +3,37 @@ import ModalUser from "./ModalUser";
 import "./ManageUser.scss";
 import { FaCirclePlus } from "react-icons/fa6";
 import TableUser from "./TableUser";
-import { getListUser, getUserWithPaginate } from "../../../services/apiService";
-import { toast } from "react-toastify";
+import { fetchListUserWithPaginate } from "../../../store/slices/userSlice";
 import ModalConfirmDelete from "./ModalConfirmDelete";
-
+import { useDispatch, useSelector } from "react-redux";
+import { LIMIT_USER } from "../../../store/slices/userSlice";
 const ManageUser = () => {
-  const LIMIT_USER = 4;
-  const [pageCount, setPageCount] = useState(0);
+  const { users, totalPages, totalUsers, loading, error } = useSelector(
+    (state) => state.user
+  );
+
   const [show, setShow] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [listUsers, setListUsers] = useState();
   const [isUpdate, setIsUpdate] = useState(false);
   const [isShowModalConfirm, setShowModalConfirm] = useState(false);
   const [isView, setIsView] = useState(false);
   const [userData, setUserData] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    // GetAllListUser();
-    fetchListUserWithPaginate(currentPage);
-  }, []);
+    fetchListUser(currentPage);
+    console.log("user  :", totalUsers);
+  }, [currentPage, totalUsers]);
 
-  const fetchAllListUser = async () => {
-    let res = await getListUser();
-    if (res && res.EC === 0) {
-      setListUsers(res.DT);
-    } else {
-      toast.error(res.EM);
+  const fetchListUser = async (page) => {
+    try {
+      await dispatch(
+        fetchListUserWithPaginate({ page: page, limit: LIMIT_USER })
+      );
+    } catch (error) {
+      console.error("Error fetching user list:", error);
     }
   };
-
-  const fetchListUserWithPaginate = async (page) => {
-    let res = await getUserWithPaginate(page, LIMIT_USER);
-    if (res && res.EC === 0) {
-      setListUsers(res.DT.users);
-      setPageCount(res.DT.totalPages);
-    } else {
-      toast.error(res.EM);
-    }
-  };
-
   const handleTongleModalConfirm = () => {
     setShowModalConfirm(!isShowModalConfirm);
   };
@@ -63,11 +55,13 @@ const ManageUser = () => {
 
   const handleViewUser = (user) => {
     setIsView(true);
-    console.log(" user view", user);
     setUserData(user);
     setShow(true);
   };
   const handleClose = () => setShow(false);
+
+  if (loading) return <p>Đang tải danh sách người dùng...</p>;
+  if (error) return <p>Có lỗi xảy ra: {error}</p>;
   return (
     <div className="manange-user-container">
       <div className="title">Manage User</div>
@@ -80,18 +74,17 @@ const ManageUser = () => {
 
         <div className="table-users-container">
           <TableUser
-            listUsers={listUsers}
+            listUsers={users}
             handleEditUser={handleEditUser}
             handleViewUser={handleViewUser}
             handleDeleteUser={handleDeleteUser}
-            fetchListUsersWithPaginate={fetchListUserWithPaginate}
-            pageCount={pageCount}
+            fetchListUsersWithPaginate={fetchListUser}
+            pageCount={totalPages}
             currentPage={currentPage}
             setCurrentPage={setCurrentPage}
           />
         </div>
         <ModalUser
-          fetchListUser={fetchAllListUser}
           fetchListUserWithPaginate={fetchListUserWithPaginate}
           show={show}
           handleClose={handleClose}
@@ -106,7 +99,6 @@ const ManageUser = () => {
           handleClose={handleTongleModalConfirm}
           userData={userData}
           fetchListUserWithPaginate={fetchListUserWithPaginate}
-          fetchListUser={fetchAllListUser}
           currentPage={currentPage}
           setCurrentPage={setCurrentPage}
         />

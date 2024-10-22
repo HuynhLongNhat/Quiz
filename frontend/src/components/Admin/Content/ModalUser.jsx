@@ -3,18 +3,18 @@ import { useEffect, useState } from "react";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import { FaCirclePlus } from "react-icons/fa6";
-import { toast } from "react-toastify";
-import { postCreateNewUser, putUpdateUser } from "../../../services/apiService";
+import { useDispatch } from "react-redux";
+import { createNewUser, updateUser } from "../../../store/slices/userSlice";
+
 const ModalUser = (props) => {
   const {
     show,
     handleClose,
-    fetchListUser,
-    setCurrentPage,
     isUpdate,
     isView,
     userData,
-    fetchListUserWithPaginate,
+    // fetchListUserWithPaginate,
+    setCurrentPage,
   } = props;
 
   const [email, setEmail] = useState("");
@@ -24,6 +24,7 @@ const ModalUser = (props) => {
   const [image, setImage] = useState("");
   const [previewImage, setPreviewImage] = useState("");
 
+  const dispatch = useDispatch();
   const resetData = () => {
     setEmail("");
     setPassword("");
@@ -97,20 +98,21 @@ const ModalUser = (props) => {
     let data;
     if (isUpdate) {
       // Gọi API để cập nhật
-      data = await putUpdateUser(userData.id, username, role, image);
+      data = await dispatch(
+        updateUser({ id: userData.id, username, role, image })
+      ).unwrap();
     } else {
       // Gọi API để tạo mới
-      data = await postCreateNewUser(email, password, username, role, image);
+      data = await await dispatch(
+        createNewUser({ email, password, username, role, image })
+      ).unwrap();
     }
 
     if (data && data.EC === 0) {
-      toast.success(data.EM);
       resetData();
       handleClose();
-      await fetchListUserWithPaginate(1);
+      // await fetchListUserWithPaginate(1);
       setCurrentPage(1);
-    } else {
-      toast.error(data.EM);
     }
   };
   return (

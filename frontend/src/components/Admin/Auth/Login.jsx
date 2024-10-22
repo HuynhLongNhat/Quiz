@@ -1,27 +1,29 @@
 import { useState } from "react";
 // Thêm file CSS để tùy chỉnh
 import { useNavigate } from "react-router-dom";
-import { postLogin } from "../../../services/apiService";
+import { useDispatch } from "react-redux";
+import { loginUser } from "../../../store/slices/userSlice";
 import { toast } from "react-toastify";
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
 
     try {
-      let res = await postLogin(email, password);
+      let res = await dispatch(loginUser({ email, password })).unwrap();
       console.log(res);
       if (res && +res.EC === 0) {
-        toast.success(res.EM);
         navigate("/");
       }
       if (res && +res.EC !== 0) {
-        toast.error(res.EM);
+        navigate("/login");
       }
+      // eslint-disable-next-line no-unused-vars
     } catch (error) {
       toast.error("An error occurred. Please try again later.");
     }

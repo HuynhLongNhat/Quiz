@@ -1,7 +1,9 @@
+/* eslint-disable react/prop-types */
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
-import { deleteUser } from "../../../services/apiService";
-import { toast } from "react-toastify";
+
+import { useDispatch } from "react-redux";
+import { removeUser } from "../../../store/slices/userSlice";
 
 const ModalConfirmDelete = (props) => {
   // eslint-disable-next-line react/prop-types
@@ -9,19 +11,16 @@ const ModalConfirmDelete = (props) => {
     show,
     handleClose,
     userData,
-    fetchListUser,
     fetchListUserWithPaginate,
-
     setCurrentPage,
   } = props;
+  const dispatch = useDispatch();
   const confirmDelete = async () => {
-    let resDelete = await deleteUser(userData.id);
-    console.log(resDelete);
+    let resDelete = await dispatch(removeUser(userData.id)).unwrap();
     if (resDelete && resDelete.EC === 0) {
-      toast.success(resDelete.EM);
-
       handleClose();
       await fetchListUserWithPaginate(1);
+
       setCurrentPage(1);
     }
   };
