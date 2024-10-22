@@ -1,26 +1,32 @@
-import { useState } from "react";
-
 import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { signUpUser } from "../../../store/slices/userSlice";
 import { toast } from "react-toastify";
-function Signup() {
-  const [email, setEmail] = useState("");
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [repassword, setRepassword] = useState("");
+import { useForm } from "react-hook-form";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { useState } from "react";
+
+const Signup = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
+  const [showRePassword, setShowRePassword] = useState(false);
 
-  const handleSignUp = async (e) => {
-    e.preventDefault();
-    if (password !== repassword) {
-      toast.error("Passwords do not match!");
-      return;
-    }
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    watch,
+  } = useForm();
+
+  const handleSignUp = async (data) => {
     try {
       let res = await dispatch(
-        signUpUser({ email, username, password })
+        signUpUser({
+          email: data.email,
+          username: data.username,
+          password: data.password,
+        })
       ).unwrap();
 
       if (res && +res.EC === 0) {
@@ -34,12 +40,14 @@ function Signup() {
     }
   };
 
+  // Watch password value for password confirmation
+  const password = watch("password", "");
+
   return (
     <div className="my-5">
       <div className="container d-flex flex-column justify-content-center align-items-center vh-100">
         <div className="text-end w-100">
           <span>Already have an account?</span>
-
           <button
             className="btn btn-dark mx-2"
             onClick={() => {
@@ -57,70 +65,124 @@ function Signup() {
         <div className="card w-50 p-4 shadow-lg">
           <div className="card-body">
             <h3 className="text-center mb-4">Sign Up</h3>
-            <form>
+            <form onSubmit={handleSubmit(handleSignUp)}>
               <div className="mb-3">
                 <label htmlFor="email" className="form-label">
                   Email address
                 </label>
                 <input
                   type="email"
-                  className="form-control"
+                  className={`form-control ${errors.email ? "is-invalid" : ""}`}
                   id="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
+                  {...register("email", {
+                    required: "Email is required",
+                    pattern: {
+                      value:
+                        /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
+                      message: "Invalid email address",
+                    },
+                  })}
                 />
+                {errors.email && (
+                  <div className="invalid-feedback">{errors.email.message}</div>
+                )}
               </div>
+
               <div className="mb-3">
                 <label htmlFor="username" className="form-label">
                   Username
                 </label>
                 <input
                   type="text"
-                  className="form-control"
+                  className={`form-control ${
+                    errors.username ? "is-invalid" : ""
+                  }`}
                   id="username"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  required
+                  {...register("username", {
+                    required: "Username is required",
+                  })}
                 />
+                {errors.username && (
+                  <div className="invalid-feedback">
+                    {errors.username.message}
+                  </div>
+                )}
               </div>
 
-              <div className="mb-3">
+              <div className="mb-3 position-relative">
                 <label htmlFor="password" className="form-label">
                   Password
                 </label>
                 <input
-                  type="password"
-                  className="form-control"
+                  type={showPassword ? "text" : "password"}
+                  key={showPassword ? "text" : "password"}
+                  className={`form-control ${
+                    errors.password ? "is-invalid" : ""
+                  }`}
                   id="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
+                  {...register("password", {
+                    required: "Password is required",
+                    pattern: {
+                      value: /^(?=.*[A-Z])(?=.*[\W_]).{8,}$/,
+                      message:
+                        "Password must be at least 8 characters long, contain at least one uppercase letter and one special character",
+                    },
+                  })}
                 />
+                {/* Biểu tượng mắt */}
+                <span
+                  className="position-absolute top-50 end-0 translate-middle-y m-3"
+                  style={{ cursor: "pointer" }}
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? <FaEyeSlash /> : <FaEye />}
+                </span>
+                {errors.password && (
+                  <div className="invalid-feedback">
+                    {errors.password.message}
+                  </div>
+                )}
               </div>
-              <div className="mb-3">
+
+              <div className="mb-3 position-relative">
                 <label htmlFor="repassword" className="form-label">
                   Re-enter Password
                 </label>
+
                 <input
-                  type="password"
-                  className="form-control"
+                  type={showRePassword ? "text" : "password"}
+                  key={showRePassword ? "text" : "password"}
+                  className={`form-control ${
+                    errors.repassword ? "is-invalid" : ""
+                  }`}
                   id="repassword"
-                  value={repassword}
-                  onChange={(e) => setRepassword(e.target.value)}
-                  required
+                  {...register("repassword", {
+                    required: "Re-enter password is required",
+                    validate: (value) =>
+                      value === password || "Passwords must match",
+                  })}
                 />
+                {/* Biểu tượng mắt */}
+                <span
+                  className="position-absolute top-50 end-0 translate-middle-y m-3 "
+                  style={{ cursor: "pointer" }}
+                  onClick={() => setShowRePassword(!showRePassword)}
+                >
+                  {showRePassword ? <FaEyeSlash /> : <FaEye />}
+                </span>
+                {errors.repassword && (
+                  <div className="invalid-feedback">
+                    {errors.repassword.message}
+                  </div>
+                )}
               </div>
 
               <div className="d-grid gap-2">
-                <button
-                  className="btn btn-dark"
-                  onClick={(e) => handleSignUp(e)}
-                >
-                  SignUp
+                <button type="submit" className="btn btn-dark">
+                  Sign Up
                 </button>
               </div>
-              <div className="my-3 text-center ">
+              <div className="my-3 text-center">
                 <span
                   style={{ cursor: "pointer" }}
                   onClick={() => {
@@ -136,6 +198,6 @@ function Signup() {
       </div>
     </div>
   );
-}
+};
 
 export default Signup;

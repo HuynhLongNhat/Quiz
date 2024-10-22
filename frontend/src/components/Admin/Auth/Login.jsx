@@ -1,29 +1,39 @@
 import { useState } from "react";
-// Thêm file CSS để tùy chỉnh
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { loginUser } from "../../../store/slices/userSlice";
 import { toast } from "react-toastify";
-function Login() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+import { useForm } from "react-hook-form";
 
+// Import icon mắt (bạn có thể sử dụng bất kỳ thư viện icon nào, ở đây là FontAwesome)
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+
+function Login() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
+  // Sử dụng React Hook Form
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
 
+  // State để kiểm soát việc hiển thị mật khẩu
+  const [showPassword, setShowPassword] = useState(false);
+
+  const handleLogin = async (data) => {
     try {
-      let res = await dispatch(loginUser({ email, password })).unwrap();
-      console.log(res);
+      let res = await dispatch(
+        loginUser({ email: data.email, password: data.password })
+      ).unwrap();
+
       if (res && +res.EC === 0) {
         navigate("/");
       }
       if (res && +res.EC !== 0) {
         navigate("/login");
       }
-      // eslint-disable-next-line no-unused-vars
     } catch (error) {
       toast.error("An error occurred. Please try again later.");
     }
@@ -52,41 +62,56 @@ function Login() {
         <div className="card w-50 p-4 shadow-lg">
           <div className="card-body">
             <h3 className="text-center mb-4">Login</h3>
-            <form>
+            <form onSubmit={handleSubmit(handleLogin)}>
               <div className="mb-3">
                 <label htmlFor="email" className="form-label">
                   Email address
                 </label>
                 <input
                   type="email"
-                  className="form-control"
+                  className={`form-control ${errors.email ? "is-invalid" : ""}`}
                   id="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
+                  {...register("email", { required: "Email is required" })}
                 />
+                {errors.email && (
+                  <div className="invalid-feedback">{errors.email.message}</div>
+                )}
               </div>
-              <div className="mb-3">
+
+              <div className="mb-3 position-relative">
                 <label htmlFor="password" className="form-label">
                   Password
                 </label>
                 <input
-                  type="password"
-                  className="form-control"
+                  type={showPassword ? "text" : "password"}
+                  className={`form-control ${
+                    errors.password ? "is-invalid" : ""
+                  }`}
                   id="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
+                  {...register("password", {
+                    required: "Password is required",
+                  })}
                 />
+                {/* Biểu tượng mắt */}
+                <span
+                  className="position-absolute top-50 end-0 translate-middle-y m-3"
+                  style={{ cursor: "pointer" }}
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? <FaEyeSlash /> : <FaEye />}
+                </span>
+                {errors.password && (
+                  <div className="invalid-feedback">
+                    {errors.password.message}
+                  </div>
+                )}
               </div>
               <div className="my-3 ">
                 <span>Forgot your password?</span>
               </div>
+
               <div className="d-grid gap-2">
-                <button
-                  className="btn btn-dark"
-                  onClick={(e) => handleLogin(e)}
-                >
+                <button type="submit" className="btn btn-dark">
                   Login
                 </button>
               </div>
