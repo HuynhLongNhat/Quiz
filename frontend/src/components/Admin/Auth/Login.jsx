@@ -4,15 +4,13 @@ import { useDispatch } from "react-redux";
 import { loginUser } from "../../../store/slices/userSlice";
 import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
-
-// Import icon mắt (bạn có thể sử dụng bất kỳ thư viện icon nào, ở đây là FontAwesome)
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-
+import { ImSpinner10 } from "react-icons/im";
+import "./Login.scss";
 function Login() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
-  // Sử dụng React Hook Form
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const {
     register,
     handleSubmit,
@@ -23,15 +21,18 @@ function Login() {
   const [showPassword, setShowPassword] = useState(false);
 
   const handleLogin = async (data) => {
+    setIsSubmitting(true);
     try {
       let res = await dispatch(
         loginUser({ email: data.email, password: data.password })
       ).unwrap();
 
       if (res && +res.EC === 0) {
+        setIsSubmitting(false);
         navigate("/");
       }
       if (res && +res.EC !== 0) {
+        setIsSubmitting(false);
         navigate("/login");
       }
     } catch (error) {
@@ -111,8 +112,16 @@ function Login() {
               </div>
 
               <div className="d-grid gap-2">
-                <button type="submit" className="btn btn-dark">
-                  Login
+                <button
+                  type="submit"
+                  className="btn btn-dark"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? (
+                    <ImSpinner10 className="loaderIcon" />
+                  ) : (
+                    <span>Login</span>
+                  )}
                 </button>
               </div>
               <div className="my-3 text-center ">
