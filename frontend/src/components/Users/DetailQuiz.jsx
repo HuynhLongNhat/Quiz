@@ -33,6 +33,7 @@ const DetailQuiz = () => {
               questionDescription = item.description;
               image = item.image;
             }
+            item.answers.isSelected = false;
             answers.push(item.answers);
           });
           return { questionId: key, answers, questionDescription, image };
@@ -51,9 +52,41 @@ const DetailQuiz = () => {
   const handleNext = () => {
     if (dataQuiz && dataQuiz.length > index + 1) setIndex(index + 1);
   };
+
+  const handleCheckbox = (answerId, questionId) => {
+    // Clone dataQuiz để không thay đổi trực tiếp
+    let dataQuizClone = _.cloneDeep(dataQuiz);
+
+    // Tìm câu hỏi đang xử lý
+    let question = dataQuizClone.find(
+      (item) => +item.questionId === +questionId
+    );
+
+    if (question && question.answers) {
+      // Duyệt qua các câu trả lời và cập nhật `isSelected` cho câu trả lời được chọn
+      question.answers = question.answers.map((answer) => {
+        if (+answer.id === +answerId) {
+          // Đổi trạng thái `isSelected`
+          answer.isSelected = !answer.isSelected;
+        }
+        return answer;
+      });
+      console.log(question.answers);
+    }
+
+    // Tìm vị trí của câu hỏi và cập nhật lại
+    let questionIndex = dataQuizClone.findIndex(
+      (item) => +item.questionId === +questionId
+    );
+    if (questionIndex > -1) {
+      dataQuizClone[questionIndex] = question;
+      setDataQuiz(dataQuizClone); // Cập nhật dataQuiz để re-render
+    }
+  };
+
   return (
     <div className="d-flex gap-3 p-5">
-      <div className="left-content">
+      <div className="w-full border rounded p-4">
         <div className="fs-1 fw-semibold">
           Quiz {quizId}: {location?.state?.quizTitle}
         </div>
@@ -65,14 +98,18 @@ const DetailQuiz = () => {
           <Question
             index={index}
             data={dataQuiz && dataQuiz.length > 0 ? dataQuiz[index] : []}
+            handleCheckbox={handleCheckbox}
           />
         </div>
-        <div className="d-flex justify-content-center gap-3">
+        <div className="d-flex justify-content-center gap-3 mt-5">
           <button className="btn btn-secondary" onClick={() => handlePrev()}>
             Prev
           </button>
           <button className="btn btn-primary" onClick={() => handleNext()}>
             Next
+          </button>
+          <button className="btn btn-warning" onClick={() => handleNext()}>
+            Finish
           </button>
         </div>
       </div>
