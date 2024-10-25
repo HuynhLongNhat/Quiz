@@ -9,6 +9,7 @@ import ManageUser from "./components/Admin/Content/ManageUser.jsx";
 import DashBoard from "./components/Admin/Content/DashBoard.jsx";
 import Login from "./components/Admin/Auth/Login.jsx";
 import SignUp from "./components/Admin/Auth/Signup.jsx";
+import ListQuiz from "./components/Users/ListQuiz.jsx";
 
 const Layout = () => {
   return (
@@ -16,7 +17,7 @@ const Layout = () => {
       <Routes>
         <Route path="/" element={<App />}>
           <Route index element={<HomePage />} />
-          <Route path="/users" element={<User />} />
+          <Route path="/users" element={<ListQuiz />} />
         </Route>
         <Route path="/admins" element={<Admin />}>
           <Route index element={<DashBoard />} />

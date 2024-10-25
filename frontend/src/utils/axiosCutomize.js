@@ -1,5 +1,6 @@
 import axios from "axios";
 import NProgress from "nprogress";
+import store from "../store/store";
 NProgress.configure({
   showSpinner: false,
   trickleSpeed: 100,
@@ -14,6 +15,8 @@ const instance = axios.create({
 // Add a request interceptor
 instance.interceptors.request.use(
   function (config) {
+    const access_token = store.getState()?.user?.userInfo?.DT?.access_token;
+    config.headers["Authorization"] = "Bearer " + access_token;
     NProgress.start();
     return config;
   },

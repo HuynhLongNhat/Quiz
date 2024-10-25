@@ -43,3 +43,7 @@ export const postSignUp = (email, username, password) => {
     password: password,
   });
 };
+
+export const getQuizByUser = () => {
+  return axiosCutomize.get("/quiz-by-participant");
+};
