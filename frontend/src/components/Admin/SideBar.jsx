@@ -49,7 +49,6 @@ const SideBar = (props) => {
                 navigate("/");
               }}
             >
-              {" "}
               Long Nhật
             </span>
           </div>
@@ -75,7 +74,11 @@ const SideBar = (props) => {
                   Quản lý Bài Quiz
                 </NavLink>
               </MenuItem>
-              <MenuItem> Quản lý Câu Hỏi</MenuItem>
+              <MenuItem>
+                <NavLink className="nav-link" to="/admins/manage-questions">
+                  Quản lý Câu hỏi
+                </NavLink>
+              </MenuItem>
             </SubMenu>
           </Menu>
         </SidebarContent>
