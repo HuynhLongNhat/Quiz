@@ -6,8 +6,6 @@ const Question = (props) => {
     return <></>;
   }
   const handleCheckQuestion = (e, answerId, questionId) => {
-    console.log("Checkbox checked", e.target.checked);
-    console.log("data", answerId, questionId);
     handleCheckbox(answerId, questionId);
   };
   return (

@@ -40,7 +40,6 @@ const DetailQuiz = () => {
         })
         .value();
       setDataQuiz(data);
-      console.log(data);
     } else {
       console.error("Error fetching data quiz:", res.EM);
     }
@@ -51,6 +50,31 @@ const DetailQuiz = () => {
   };
   const handleNext = () => {
     if (dataQuiz && dataQuiz.length > index + 1) setIndex(index + 1);
+  };
+
+  const handleFinishQuiz = () => {
+    let payload = {
+      quizId: +quizId,
+      answers: [],
+    };
+    let resutls = [];
+    if (dataQuiz && dataQuiz.length > 0) {
+      dataQuiz.forEach((question) => {
+        let questionId = question.questionId;
+        let userAnswerId = [];
+
+        // todo :usserAnswerId
+        question.answers.forEach((answer) => {
+          if (answer.isSelected === true) {
+            userAnswerId.push(+answer.id);
+          }
+        });
+
+        resutls.push({ questionId: +questionId, userAnswerId: userAnswerId });
+      });
+      payload.answers = resutls;
+      console.log(" final payload ", payload);
+    }
   };
 
   const handleCheckbox = (answerId, questionId) => {
@@ -71,7 +95,6 @@ const DetailQuiz = () => {
         }
         return answer;
       });
-      console.log(question.answers);
     }
 
     // Tìm vị trí của câu hỏi và cập nhật lại
@@ -108,7 +131,10 @@ const DetailQuiz = () => {
           <button className="btn btn-primary" onClick={() => handleNext()}>
             Next
           </button>
-          <button className="btn btn-warning" onClick={() => handleNext()}>
+          <button
+            className="btn btn-warning"
+            onClick={() => handleFinishQuiz()}
+          >
             Finish
           </button>
         </div>
