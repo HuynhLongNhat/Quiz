@@ -9,7 +9,7 @@ import {
   SidebarFooter,
   SidebarContent,
 } from "react-pro-sidebar";
-
+import { useNavigate } from "react-router-dom";
 import { FaGem } from "react-icons/fa";
 import sidebarBg from "../../assets/bg2.jpg";
 
@@ -20,6 +20,7 @@ import "./SideBar.scss";
 
 const SideBar = (props) => {
   const { collapsed, toggled, handleToggleSidebar } = props;
+  const navigate = useNavigate();
   return (
     <>
       <ProSidebar
@@ -43,7 +44,14 @@ const SideBar = (props) => {
             }}
           >
             <DiReact size={"3em"} color={"00bfff"} />
-            <span> Long Nhật</span>
+            <span
+              onClick={() => {
+                navigate("/");
+              }}
+            >
+              {" "}
+              Long Nhật
+            </span>
           </div>
         </SidebarHeader>
 
@@ -62,7 +70,11 @@ const SideBar = (props) => {
                   Quản lý Users
                 </NavLink>
               </MenuItem>
-              <MenuItem> Quản lý Bài Quiz</MenuItem>
+              <MenuItem>
+                <NavLink className="nav-link" to="/admins/manage-quizzes">
+                  Quản lý Bài Quiz
+                </NavLink>
+              </MenuItem>
               <MenuItem> Quản lý Câu Hỏi</MenuItem>
             </SubMenu>
           </Menu>

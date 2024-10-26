@@ -55,3 +55,12 @@ export const getDataQuiz = (quizId) => {
 export const postSubmitQuiz = (data) => {
   return axiosCutomize.post("/quiz-submit", { ...data });
 };
+
+export const postCreateNewQuiz = (name, description, level, image) => {
+  const data = new FormData();
+  data.append("name", name);
+  data.append("description", description);
+  data.append("difficulty", level);
+  data.append("quizImage", image);
+  return axiosCutomize.post("/quiz", data);
+};
