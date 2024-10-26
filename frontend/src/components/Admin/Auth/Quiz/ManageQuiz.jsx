@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import "bootstrap/dist/css/bootstrap.min.css";
-import "bootstrap/dist/js/bootstrap.bundle.min.js";
+
 import Select from "react-select";
 import { postCreateNewQuiz } from "../../../../services/apiService";
 import { toast } from "react-toastify";
@@ -121,7 +120,7 @@ const ManageQuiz = () => {
       <hr />
       <div>
         <div className="form-floating mb-3">
-          <div className="mt-5">
+          <div className="mt-3 ">
             <p className="fs-4 text-center fw-bold">List Quiz</p>
             <TableQuiz />
           </div>

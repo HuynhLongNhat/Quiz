@@ -25,7 +25,7 @@ const TableQuiz = () => {
   };
   return (
     <div>
-      <table className="table table-hover">
+      <table className="table table-hover ">
         <thead>
           <tr>
             <th scope="col">ID</th>
