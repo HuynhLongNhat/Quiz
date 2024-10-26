@@ -64,3 +64,7 @@ export const postCreateNewQuiz = (name, description, level, image) => {
   data.append("quizImage", image);
   return axiosCutomize.post("/quiz", data);
 };
+
+export const getAllQuiz = () => {
+  return axiosCutomize.get("/quiz/all");
+};
