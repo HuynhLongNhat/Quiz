@@ -51,3 +51,7 @@ export const getQuizByUser = () => {
 export const getDataQuiz = (quizId) => {
   return axiosCutomize.get(`/questions-by-quiz?quizId=${quizId}`);
 };
+
+export const postSubmitQuiz = (data) => {
+  return axiosCutomize.post("/quiz-submit", { ...data });
+};
