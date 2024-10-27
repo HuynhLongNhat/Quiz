@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Select from "react-select";
 import { FaCirclePlus, FaCircleMinus } from "react-icons/fa6";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -7,12 +7,13 @@ import { v4 as uuidv4 } from "uuid";
 import _ from "lodash";
 import Lightbox from "react-awesome-lightbox";
 import Question from "../../../Users/Question";
+import {
+  getAllQuiz,
+  postCreateNewQuestionForQuiz,
+  postCreateNewAnswerForQuestion,
+} from "../../../../services/apiService";
+import { toast } from "react-toastify";
 const ManageQuestion = () => {
-  const options = [
-    { value: "EASY", label: "EASY" },
-    { value: "MEDIUM", label: "MEDIUM" },
-    { value: "HARD", label: "HARD" },
-  ];
   const [selectedQuiz, setSelectedQuiz] = useState({});
   const [questions, setQuestions] = useState([
     {
@@ -35,6 +36,24 @@ const ManageQuestion = () => {
     title: "",
     url: "",
   });
+  const [listQuiz, setlistQuiz] = useState([]);
+  useEffect(() => {
+    fetchAllQuiz();
+  }, []);
+
+  const fetchAllQuiz = async () => {
+    let res = await getAllQuiz();
+    if (res && res.EC === 0) {
+      let newQuiz = res.DT.map((item) => {
+        return {
+          value: item.id,
+          label: `${item.id}  - ${item.description}`,
+        };
+      });
+      setlistQuiz(newQuiz);
+    }
+  };
+
   const handleAddRemoveQuestion = (type, id) => {
     if (type === "ADD") {
       // Create a new question with a unique ID and default structure
@@ -154,7 +173,45 @@ const ManageQuestion = () => {
       setisPreviewImage(true);
     }
   };
-  const handleSubmitQuestions = () => {};
+  const handleSubmitQuestions = async () => {
+    try {
+      console.log("Submit", questions, selectedQuiz);
+
+      //submit questions
+      await Promise.all(
+        questions.map(async (question) => {
+          // Create a new question for the quiz
+          const res = await postCreateNewQuestionForQuiz(
+            +selectedQuiz.value,
+            question.description,
+            question.imageFile
+          );
+
+          // Check if the question was created successfully
+          if (res && res.DT && res.DT.id) {
+            //submit answer
+            await Promise.all(
+              question.answers.map((answer) =>
+                postCreateNewAnswerForQuestion(
+                  res.DT.id,
+                  answer.isCorrect,
+                  answer.description
+                )
+              )
+            );
+          }
+        })
+      );
+
+      toast.success("Submit questions and answers successfully!");
+      // Reset the form
+      setSelectedQuiz({});
+      setQuestions([]);
+      setisPreviewImage(false);
+    } catch (error) {
+      toast.error("Error submitting questions and answers:", error);
+    }
+  };
 
   return (
     <div
@@ -169,7 +226,7 @@ const ManageQuestion = () => {
         <Select
           value={selectedQuiz}
           onChange={setSelectedQuiz}
-          options={options}
+          options={listQuiz}
           placeholder="Choose a quiz"
           menuPortalTarget={document.body} // Đẩy menu dropdown lên trên
           styles={{
@@ -284,7 +341,7 @@ const ManageQuestion = () => {
                             "INPUT",
                             question.id,
                             answer.id,
-                            e.target.checked
+                            e.target.value
                           )
                         }
                       />
@@ -324,7 +381,6 @@ const ManageQuestion = () => {
       {questions && questions.length > 0 && (
         <div className="text-end m-4">
           <button
-            type="submit"
             className="btn btn-primary "
             onClick={() => handleSubmitQuestions()}
           >

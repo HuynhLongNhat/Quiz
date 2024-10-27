@@ -68,3 +68,27 @@ export const postCreateNewQuiz = (name, description, level, image) => {
 export const getAllQuiz = () => {
   return axiosCutomize.get("/quiz/all");
 };
+
+export const postCreateNewQuestionForQuiz = (
+  quiz_id,
+  description,
+  questionImage
+) => {
+  const data = new FormData();
+  data.append("quiz_id", quiz_id);
+  data.append("description", description);
+  data.append("questionImage", questionImage);
+  return axiosCutomize.post("/question", data);
+};
+
+export const postCreateNewAnswerForQuestion = (
+  question_id,
+  correct_answer,
+  description
+) => {
+  const data = new FormData();
+  data.append("question_id", question_id);
+  data.append("correct_answer", correct_answer);
+  data.append("description", description);
+  return axiosCutomize.post("/answer", data);
+};
