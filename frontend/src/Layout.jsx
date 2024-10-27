@@ -2,6 +2,7 @@ import { ToastContainer } from "react-toastify";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import "react-perfect-scrollbar/dist/css/styles.css";
+import "react-awesome-lightbox/build/style.css";
 import { Route, Routes } from "react-router-dom";
 import App from "./App.jsx";
 import User from "./components/Users/User.jsx";

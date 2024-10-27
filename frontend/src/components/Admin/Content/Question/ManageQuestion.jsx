@@ -5,6 +5,8 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { BiSolidImageAdd } from "react-icons/bi";
 import { v4 as uuidv4 } from "uuid";
 import _ from "lodash";
+import Lightbox from "react-awesome-lightbox";
+import Question from "../../../Users/Question";
 const ManageQuestion = () => {
   const options = [
     { value: "EASY", label: "EASY" },
@@ -15,52 +17,37 @@ const ManageQuestion = () => {
   const [questions, setQuestions] = useState([
     {
       id: uuidv4(),
-      description: "Question 1 ",
+      description: "",
       image: "",
       imageName: "",
       imageFile: "",
       answers: [
         {
           id: uuidv4(),
-          description: "Answer 1",
-          isCorrect: false,
-        },
-      ],
-    },
-    {
-      id: uuidv4(),
-      description: "Question 2 ",
-      image: "",
-      imageName: "",
-      imageFile: "",
-      answers: [
-        {
-          id: uuidv4(),
-          description: "Answer 1",
+          description: "",
           isCorrect: false,
         },
       ],
     },
   ]);
-
+  const [isPreviewImage, setisPreviewImage] = useState(false);
+  const [dataImagePreview, setdataImagePreview] = useState({
+    title: "",
+    url: "",
+  });
   const handleAddRemoveQuestion = (type, id) => {
     if (type === "ADD") {
       // Create a new question with a unique ID and default structure
       const newQuestion = {
         id: uuidv4(),
-        description: `Question ${questions.length + 1}`,
+        description: "",
         image: "",
         imageName: "",
         imageFile: "",
         answers: [
           {
             id: uuidv4(),
-            description: "Answer 1",
-            isCorrect: false,
-          },
-          {
-            id: uuidv4(),
-            description: "Answer 2",
+            description: "",
             isCorrect: false,
           },
         ],
@@ -74,11 +61,6 @@ const ManageQuestion = () => {
   };
 
   const handleAddRemoveAnswer = (type, questionId, answerId) => {
-    console.log(
-      " type: " + type + ", questionId: " + questionId,
-      " answer :",
-      answerId
-    );
     let questionsClone = _.cloneDeep(questions);
     // Tìm vị trí của câu hỏi dựa trên questionId
     let questionIndex = questionsClone.findIndex(
@@ -87,9 +69,7 @@ const ManageQuestion = () => {
     if (type === "ADD") {
       const newAnswer = {
         id: uuidv4(),
-        description: `Answer ${
-          questionsClone[questionIndex].answers.length + 1
-        }`,
+        description: "",
         isCorrect: false,
       };
 
@@ -104,6 +84,77 @@ const ManageQuestion = () => {
       setQuestions(questionsClone);
     }
   };
+
+  const handleOnchangeQuestion = (type, questionId, value) => {
+    let questionsClone = _.cloneDeep(questions);
+    // Tìm vị trí của câu h��i dựa trên questionId
+    let questionIndex = questionsClone.findIndex(
+      (item) => item.id === questionId
+    );
+    if (type === "QUESTION") {
+      if (questionIndex > -1) {
+        questionsClone[questionIndex].description = value;
+      }
+    } else if (type === "IMAGE") {
+      questionsClone[questionIndex].image = value;
+    }
+    setQuestions(questionsClone);
+  };
+
+  const handleOnchangeFileQuestion = (questionId, e) => {
+    let questionsClone = _.cloneDeep(questions);
+    // Tìm vị trí của câu h��i dựa trên questionId
+    let questionIndex = questionsClone.findIndex(
+      (item) => item.id === questionId
+    );
+    if (questionIndex > -1 && e.target && e.target.files && e.target.files[0]) {
+      questionsClone[questionIndex].imageFile = e.target.files[0];
+      questionsClone[questionIndex].imageName = e.target.files[0].name;
+      console.log(e.target.files[0]);
+      setQuestions(questionsClone);
+    }
+  };
+
+  const handleOnchangeAnswer = (type, questionId, answerId, value) => {
+    console.log(type, questionId, answerId, value);
+    let questionsClone = _.cloneDeep(questions);
+    // Tìm vị trí của câu hỏi dựa trên questionId
+    let questionIndex = questionsClone.findIndex(
+      (item) => item.id === questionId
+    );
+    if (questionIndex > -1) {
+      questionsClone[questionIndex].answers = questionsClone[
+        questionIndex
+      ].answers.map((answer) => {
+        if (answer.id === answerId) {
+          if (type === "CHECKBOX") {
+            answer.isCorrect = value;
+          }
+          if (type === "INPUT") {
+            answer.description = value;
+          }
+        }
+        return answer;
+      });
+      setQuestions(questionsClone);
+    }
+  };
+
+  const handlePreviewImage = (questionId) => {
+    let questionsClone = _.cloneDeep(questions);
+    // Tìm vị trí của câu h��i dựa trên questionId
+    let questionIndex = questionsClone.findIndex(
+      (item) => item.id === questionId
+    );
+    if (questionIndex > -1) {
+      setdataImagePreview({
+        title: questionsClone[questionIndex].description,
+        url: questionsClone[questionIndex].imageFile,
+      });
+      setisPreviewImage(true);
+    }
+  };
+  const handleSubmitQuestions = () => {};
 
   return (
     <div
@@ -141,17 +192,22 @@ const ManageQuestion = () => {
                       className="form-control"
                       placeholder="Enter question description"
                       value={question.description}
-                      onChange={(e) => {
-                        const newQuestions = [...questions];
-                        newQuestions[index].description = e.target.value;
-                        setQuestions(newQuestions);
-                      }}
+                      onChange={(e) =>
+                        handleOnchangeQuestion(
+                          "QUESTION",
+                          question.id,
+                          e.target.value
+                        )
+                      }
                     />
                     <label>Question {index + 1} &apos;s Description</label>
                   </div>
                 </div>
                 <div className="col-md-4">
-                  <label className="label-up" htmlFor={`upload-file-${index}`}>
+                  <label
+                    className="label-up"
+                    htmlFor={`upload-file-${question.id}`}
+                  >
                     <span className="fs-2 text-success">
                       <BiSolidImageAdd />
                     </span>
@@ -159,16 +215,22 @@ const ManageQuestion = () => {
                   <input
                     type="file"
                     hidden
-                    id={`upload-file-${index}`}
-                    onChange={(e) => {
-                      const newQuestions = [...questions];
-                      newQuestions[index].imageFile = e.target.files[0];
-                      newQuestions[index].imageName =
-                        e.target.files[0]?.name || "";
-                      setQuestions(newQuestions);
-                    }}
+                    id={`upload-file-${question.id}`}
+                    onChange={(e) => handleOnchangeFileQuestion(question.id, e)}
                   />
-                  <span>{question.imageName || "No file uploaded"}</span>
+                  <span
+                    style={{
+                      cursor: question.imageName ? "pointer" : "default",
+                      color: question.imageName ? "inherit" : "gray",
+                    }}
+                    onClick={() =>
+                      question.imageName && handlePreviewImage(question.id)
+                    }
+                  >
+                    {question.imageName
+                      ? question.imageName
+                      : "No file uploaded"}
+                  </span>
                 </div>
                 <div className="col-md-2 d-flex justify-content-center mt-3 mt-md-0">
                   <span
@@ -202,12 +264,14 @@ const ManageQuestion = () => {
                       type="checkbox"
                       className="form-check-input me-2"
                       checked={answer.isCorrect}
-                      onChange={() => {
-                        const newQuestions = [...questions];
-                        newQuestions[index].answers[answerIndex].isCorrect =
-                          !answer.isCorrect;
-                        setQuestions(newQuestions);
-                      }}
+                      onChange={(e) =>
+                        handleOnchangeAnswer(
+                          "CHECKBOX",
+                          question.id,
+                          answer.id,
+                          e.target.checked
+                        )
+                      }
                     />
                     <div className="form-floating flex-grow-1 ">
                       <input
@@ -215,12 +279,14 @@ const ManageQuestion = () => {
                         className="form-control"
                         placeholder="Enter answer text"
                         value={answer.description}
-                        onChange={(e) => {
-                          const newQuestions = [...questions];
-                          newQuestions[index].answers[answerIndex].description =
-                            e.target.value;
-                          setQuestions(newQuestions);
-                        }}
+                        onChange={(e) =>
+                          handleOnchangeAnswer(
+                            "INPUT",
+                            question.id,
+                            answer.id,
+                            e.target.checked
+                          )
+                        }
                       />
                       <label>Answer {answerIndex + 1}</label>
                     </div>
@@ -254,6 +320,25 @@ const ManageQuestion = () => {
             </div>
           );
         })}
+
+      {questions && questions.length > 0 && (
+        <div className="text-end m-4">
+          <button
+            type="submit"
+            className="btn btn-primary "
+            onClick={() => handleSubmitQuestions()}
+          >
+            Save
+          </button>
+        </div>
+      )}
+      {isPreviewImage && (
+        <Lightbox
+          image={URL.createObjectURL(dataImagePreview.url)}
+          title={dataImagePreview.title}
+          onClose={() => setisPreviewImage(false)}
+        ></Lightbox>
+      )}
     </div>
   );
 };
