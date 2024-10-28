@@ -4,9 +4,9 @@ import "./ManageUser.scss";
 import { FaCirclePlus } from "react-icons/fa6";
 import TableUser from "./TableUser";
 import { fetchListUserWithPaginate } from "../../../store/slices/userSlice";
-import ModalConfirmDelete from "./ModalConfirmDelete";
 import { useDispatch, useSelector } from "react-redux";
 import { LIMIT_USER } from "../../../store/slices/userSlice";
+import ModalConfirmDeleteUser from "./ModalConfirmDeleteUser";
 const ManageUser = () => {
   const { users, totalPages, totalUsers, loading, error } = useSelector(
     (state) => state.user
@@ -94,7 +94,7 @@ const ManageUser = () => {
           currentPage={currentPage}
           setCurrentPage={setCurrentPage}
         />
-        <ModalConfirmDelete
+        <ModalConfirmDeleteUser
           show={isShowModalConfirm}
           handleClose={handleTongleModalConfirm}
           userData={userData}

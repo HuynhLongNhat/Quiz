@@ -1,8 +1,9 @@
+/* eslint-disable react/prop-types */
 import { useEffect, useState } from "react";
 import { getAllQuiz } from "../../../../services/apiService";
-const TableQuiz = () => {
+const TableQuiz = (props) => {
   const [listQuiz, setListQuiz] = useState([]);
-
+  const { handleDeleteQuiz, handleEditQuiz } = props;
   useEffect(() => {
     fetchAllQuiz();
   }, []);
@@ -16,13 +17,7 @@ const TableQuiz = () => {
   const handleViewQuiz = (quiz) => {
     // TODO: Navigate to DetailQuiz page with quiz id
   };
-  const handleEditQuiz = (quiz) => {
-    // TODO: Navigate to EditQuiz page with quiz id
-  };
-  const handleDeleteQuiz = (quiz) => {
-    // TODO: Confirmation dialog before delete
-    // TODO: Call API to delete quiz with quiz id
-  };
+
   return (
     <div>
       <table className="table table-hover ">

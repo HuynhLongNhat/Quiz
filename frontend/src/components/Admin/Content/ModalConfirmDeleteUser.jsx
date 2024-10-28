@@ -5,7 +5,7 @@ import Modal from "react-bootstrap/Modal";
 import { useDispatch } from "react-redux";
 import { removeUser } from "../../../store/slices/userSlice";
 
-const ModalConfirmDelete = (props) => {
+const ModalConfirmDeleteUser = (props) => {
   // eslint-disable-next-line react/prop-types
   const {
     show,
@@ -54,4 +54,4 @@ const ModalConfirmDelete = (props) => {
   );
 };
 
-export default ModalConfirmDelete;
+export default ModalConfirmDeleteUser;

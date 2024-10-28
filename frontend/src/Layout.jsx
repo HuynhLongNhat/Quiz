@@ -16,7 +16,7 @@ import ListQuiz from "./components/Users/ListQuiz.jsx";
 import DetailQuiz from "./components/Users/DetailQuiz.jsx";
 import Notfound from "./components/NotFound/Notfound.jsx";
 import ManageQuiz from "./components/Admin/Auth/Quiz/ManageQuiz.jsx";
-import ManageQuestion from "./components/Admin/Content/Question/ManageQuestion.jsx";
+import ManageQuestion from "./components/Admin/Auth/Quiz/ManageQuestion.jsx";
 
 const Layout = () => {
   return (

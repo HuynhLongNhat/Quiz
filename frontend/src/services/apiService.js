@@ -92,3 +92,9 @@ export const postCreateNewAnswerForQuestion = (
   data.append("description", description);
   return axiosCutomize.post("/answer", data);
 };
+
+export const deleteQuiz = (quizId) => {
+  return axiosCutomize.delete(`/quiz/${quizId}`);
+};
+
+export const postUpdateQuiz = (quizId) => {};
