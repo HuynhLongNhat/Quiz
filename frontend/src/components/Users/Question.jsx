@@ -1,7 +1,12 @@
 /* eslint-disable react/prop-types */
 import _ from "lodash";
+import { useState } from "react";
+import Lightbox from "react-awesome-lightbox";
+
 const Question = (props) => {
   const { data, index, handleCheckbox } = props;
+
+  const [isPreviewImage, setisPreviewImage] = useState(false);
   if (_.isEmpty(data)) {
     return <></>;
   }
@@ -13,9 +18,17 @@ const Question = (props) => {
       {data.image ? (
         <div className="mb-3">
           <img
+            onClick={() => setisPreviewImage(true)}
             className="img-fluid mx-auto rounded shadow d-block w-25 h-full"
             src={`data:image/jpeg;base64,${data.image}`}
           />
+          {isPreviewImage && (
+            <Lightbox
+              image={`data:image/jpeg;base64,${data.image}`}
+              title={"Question Image"}
+              onClose={() => setisPreviewImage(false)}
+            ></Lightbox>
+          )}
         </div>
       ) : (
         <div style={{ width: "200px", height: "160px" }}></div>

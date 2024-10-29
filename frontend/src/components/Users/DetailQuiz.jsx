@@ -5,6 +5,8 @@ import _ from "lodash";
 import Question from "./Question";
 import { toast } from "react-toastify";
 import ModalResult from "./ModalResult";
+import RightContent from "./Content/RightContent";
+
 const DetailQuiz = () => {
   const params = useParams();
   const quizId = params.id;
@@ -126,8 +128,8 @@ const DetailQuiz = () => {
 
   return (
     <div className="d-flex gap-3 p-5">
-      <div className="w-full border rounded p-4">
-        <div className="fs-1 fw-semibold">
+      <div style={{ flex: "0 0 70%" }} className="border rounded p-4">
+        <div className="fs-4 fw-semibold">
           Quiz {quizId}: {location?.state?.quizTitle}
         </div>
         <hr />
@@ -156,7 +158,12 @@ const DetailQuiz = () => {
           </button>
         </div>
       </div>
-      <div className="right-content"></div>
+      <div
+        style={{ flex: "0 0 30%" }}
+        className=" border border-gray rounded p-3"
+      >
+        <RightContent dataQuiz={dataQuiz} />
+      </div>
 
       <ModalResult
         show={isShowModalResult}
