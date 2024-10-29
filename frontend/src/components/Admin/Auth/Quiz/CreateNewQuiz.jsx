@@ -20,7 +20,6 @@ const CreateNewQuiz = () => {
     {
       id: uuidv4(),
       description: "",
-      image: "",
       imageName: "",
       imageFile: "",
       answers: [
@@ -61,7 +60,6 @@ const CreateNewQuiz = () => {
       const newQuestion = {
         id: uuidv4(),
         description: "",
-        image: "",
         imageName: "",
         imageFile: "",
         answers: [
@@ -240,10 +238,8 @@ const CreateNewQuiz = () => {
               className="container p-4 rounded shadow-sm"
               style={{ backgroundColor: "#f9f9f9" }}
             >
-              <h3 className="mb-4 text-primary fw-bold">Manage Questions</h3>
-
               {/* Select Quiz */}
-              <div className="mb-4">
+              <div className="mb-4 w-50">
                 <label className="form-label fw-semibold">Select Quiz:</label>
                 <Select
                   value={selectedQuiz}

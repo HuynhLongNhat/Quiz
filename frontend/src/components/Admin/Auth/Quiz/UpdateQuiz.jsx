@@ -9,9 +9,8 @@ import Lightbox from "react-awesome-lightbox";
 
 import {
   getAllQuiz,
-  postCreateNewQuestionForQuiz,
-  postCreateNewAnswerForQuestion,
   getQuizWithQA,
+  postUpsertQA,
 } from "../../../../services/apiService";
 import { toast } from "react-toastify";
 
@@ -21,7 +20,6 @@ const UpdateQuiz = () => {
     {
       id: uuidv4(),
       description: "",
-      image: "",
       imageName: "",
       imageFile: "",
       answers: [
@@ -102,7 +100,6 @@ const UpdateQuiz = () => {
         }
       }
       setQuestions(newQA);
-      console.log("Check new QA", newQA);
     }
   };
 
@@ -112,7 +109,6 @@ const UpdateQuiz = () => {
       const newQuestion = {
         id: uuidv4(),
         description: "",
-        image: "",
         imageName: "",
         imageFile: "",
         answers: [
@@ -187,7 +183,6 @@ const UpdateQuiz = () => {
   };
 
   const handleOnchangeAnswer = (type, questionId, answerId, value) => {
-    console.log(type, questionId, answerId, value);
     let questionsClone = _.cloneDeep(questions);
     // Tìm vị trí của câu hỏi dựa trên questionId
     let questionIndex = questionsClone.findIndex(
@@ -225,41 +220,34 @@ const UpdateQuiz = () => {
       setisPreviewImage(true);
     }
   };
+  const toBase64 = (file) =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = reject;
+    });
   const handleSubmitQuestions = async () => {
+    console.log(questions);
     try {
-      console.log("Submit", questions, selectedQuiz);
+      let questionClone = _.cloneDeep(questions);
+      for (let i = 0; i < questionClone.length; i++) {
+        if (questionClone[i].imageFile) {
+          const base64 = await toBase64(questionClone[i].imageFile);
+          questionClone[i].imageFile = base64;
+        }
+      }
 
-      //submit questions
-      await Promise.all(
-        questions.map(async (question) => {
-          // Create a new question for the quiz
-          const res = await postCreateNewQuestionForQuiz(
-            +selectedQuiz.value,
-            question.description,
-            question.imageFile
-          );
-
-          // Check if the question was created successfully
-          if (res && res.DT && res.DT.id) {
-            //submit answer
-            await Promise.all(
-              question.answers.map((answer) =>
-                postCreateNewAnswerForQuestion(
-                  res.DT.id,
-                  answer.isCorrect,
-                  answer.description
-                )
-              )
-            );
-          }
-        })
-      );
-
-      toast.success("Submit questions and answers successfully!");
-      // Reset the form
-      setSelectedQuiz({});
-      setQuestions([]);
-      setisPreviewImage(false);
+      let res = await postUpsertQA({
+        quizId: selectedQuiz.value,
+        questions: questionClone,
+      });
+      console.log(questionClone);
+      toast.success(res.EM);
+      // // Reset the form
+      // setSelectedQuiz({});
+      // setQuestions([]);
+      // setisPreviewImage(false);
     } catch (error) {
       toast.error("Error submitting questions and answers:", error);
     }
@@ -291,10 +279,8 @@ const UpdateQuiz = () => {
               className="container p-4 rounded shadow-sm"
               style={{ backgroundColor: "#f9f9f9" }}
             >
-              <h3 className="mb-4 text-primary fw-bold">Manage Questions</h3>
-
               {/* Select Quiz */}
-              <div className="mb-4">
+              <div className="mb-4 w-50">
                 <label className="form-label fw-semibold">Select Quiz:</label>
                 <Select
                   value={selectedQuiz}
@@ -461,10 +447,10 @@ const UpdateQuiz = () => {
               {questions && questions.length > 0 && (
                 <div className="text-end m-4">
                   <button
-                    className="btn btn-primary "
+                    className="btn btn-warning "
                     onClick={() => handleSubmitQuestions()}
                   >
-                    Save
+                    Save changes
                   </button>
                 </div>
               )}

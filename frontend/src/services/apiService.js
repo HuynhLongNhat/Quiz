@@ -106,3 +106,7 @@ export const postAssignQuiz = (quizId, userId) => {
 export const getQuizWithQA = (quizId) => {
   return axiosCutomize.get(`/quiz-with-qa/${quizId}`);
 };
+
+export const postUpsertQA = (data) => {
+  return axiosCutomize.post(`/quiz-upsert-qa`, { ...data });
+};
