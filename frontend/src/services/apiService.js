@@ -98,3 +98,11 @@ export const deleteQuiz = (quizId) => {
 };
 
 export const postUpdateQuiz = (quizId) => {};
+
+export const postAssignQuiz = (quizId, userId) => {
+  return axiosCutomize.post(`/quiz-assign-to-user`, { quizId, userId });
+};
+
+export const getQuizWithQA = (quizId) => {
+  return axiosCutomize.get(`/quiz-with-qa/${quizId}`);
+};

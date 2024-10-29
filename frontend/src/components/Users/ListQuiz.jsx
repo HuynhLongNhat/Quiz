@@ -15,7 +15,7 @@ const ListQuiz = () => {
     }
   };
   return (
-    <div className="d-flex gap-5 container">
+    <div className="d-flex gap-4 container flex-wrap mx-auto">
       {listQuiz &&
         listQuiz.length > 0 &&
         listQuiz.map((quiz, index) => {
