@@ -162,7 +162,11 @@ const DetailQuiz = () => {
         style={{ flex: "0 0 30%" }}
         className=" border border-gray rounded p-3"
       >
-        <RightContent dataQuiz={dataQuiz} handleFinishQuiz={handleFinishQuiz} />
+        <RightContent
+          dataQuiz={dataQuiz}
+          handleFinishQuiz={handleFinishQuiz}
+          setIndex={setIndex}
+        />
       </div>
 
       <ModalResult

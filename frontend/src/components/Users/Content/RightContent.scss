@@ -4,10 +4,21 @@
         width: 40px;
         height: 40px;
         cursor: pointer;
+        border : 1px solid rgb(163, 163, 163) ;
+        border-radius: 50px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
 
         &:hover {
-            background-color: black;
+            background-color: rgb(203, 203, 203);
             color: #fff;
+        }
+        &.selected {
+            background-color: #c6c6c6;
+        }
+        &.clicked {
+            color: red;
         }
     }
 }
