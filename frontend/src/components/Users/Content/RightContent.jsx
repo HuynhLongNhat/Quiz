@@ -1,11 +1,15 @@
+import CountDown from "./CountDown";
 import "./RightContent.scss";
 const RightContent = (props) => {
   // eslint-disable-next-line react/prop-types
-  const { dataQuiz } = props;
+  const { dataQuiz, handleFinishQuiz } = props;
+  const onTimeUp = () => {
+    handleFinishQuiz();
+  };
   return (
     <div>
       <div className="border-bottom border-dashed pb-2 text-center fw-bold pt-2 fs-5">
-        10:10
+        <CountDown onTimeUp={onTimeUp} />
       </div>
       <div className="d-flex gap-3 mt-2 flex-wrap question-list">
         {dataQuiz &&
@@ -17,7 +21,7 @@ const RightContent = (props) => {
               <div
                 key={`question-${index}`}
                 className="question border border-gray border
-         rounded-circle d-flex  justify-content-center align-items-center"
+                 rounded-circle d-flex  justify-content-center align-items-center"
                 //   style="cursor: pointer;"
               >
                 {index + 1}
