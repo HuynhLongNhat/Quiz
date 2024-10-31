@@ -110,3 +110,7 @@ export const getQuizWithQA = (quizId) => {
 export const postUpsertQA = (data) => {
   return axiosCutomize.post(`/quiz-upsert-qa`, { ...data });
 };
+
+export const logoutUser = (email, refresh_token) => {
+  return axiosCutomize.post(`/logout`, { email, refresh_token });
+};

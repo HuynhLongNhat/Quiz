@@ -158,9 +158,11 @@ const userSlice = createSlice({
     error: null,
   },
   reducers: {
-    // logout: (state) => {
-    //   state.userInfo = null;
-    // },
+    logout: (state) => {
+      state.userInfo = null;
+      state.error = null;
+      state.loading = false;
+    },
     updateTotalUsers: (state, action) => {
       // Thêm action mới
       state.totalUsers = action.payload.totalRows;
@@ -268,5 +270,5 @@ const userSlice = createSlice({
   },
 });
 
-export const { updateTotalUsers } = userSlice.actions;
+export const { updateTotalUsers, logout } = userSlice.actions;
 export default userSlice.reducer;
