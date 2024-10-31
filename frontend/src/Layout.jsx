@@ -5,7 +5,7 @@ import "react-perfect-scrollbar/dist/css/styles.css";
 import "react-awesome-lightbox/build/style.css";
 import { Route, Routes } from "react-router-dom";
 import App from "./App.jsx";
-import User from "./components/Users/User.jsx";
+
 import Admin from "./components/Admin/Admin.jsx";
 import HomePage from "./components/Home/HomePage.jsx";
 import ManageUser from "./components/Admin/Content/ManageUser.jsx";
@@ -17,6 +17,7 @@ import DetailQuiz from "./components/Users/DetailQuiz.jsx";
 import Notfound from "./components/NotFound/Notfound.jsx";
 import ManageQuiz from "./components/Admin/Auth/Quiz/ManageQuiz.jsx";
 import ManageQuestion from "./components/Admin/Auth/Quiz/ManageQuestion.jsx";
+import PrivateRoute from "./routes/PrivateRoute.jsx";
 
 const Layout = () => {
   return (
@@ -24,10 +25,24 @@ const Layout = () => {
       <Routes>
         <Route path="/" element={<App />}>
           <Route index element={<HomePage />} />
-          <Route path="/users" element={<ListQuiz />} />
+          <Route
+            path="/users"
+            element={
+              <PrivateRoute>
+                <ListQuiz />
+              </PrivateRoute>
+            }
+          />
         </Route>
         <Route path="/quiz/:id" element={<DetailQuiz />} />
-        <Route path="/admins" element={<Admin />}>
+        <Route
+          path="/admins"
+          element={
+            <PrivateRoute>
+              <Admin />
+            </PrivateRoute>
+          }
+        >
           <Route index element={<DashBoard />} />
           <Route path="manage-users" element={<ManageUser />} />
           <Route path="manage-quizzes" element={<ManageQuiz />} />
