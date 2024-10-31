@@ -7,6 +7,7 @@ import { useForm } from "react-hook-form";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { ImSpinner10 } from "react-icons/im";
 import "./Login.scss";
+import Language from "../../Header/Language";
 function Login() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -43,7 +44,7 @@ function Login() {
   return (
     <div className="login-container">
       <div className="container d-flex flex-column justify-content-center align-items-center vh-100">
-        <div className="text-end w-100">
+        <div className="w-100 d-flex gap-3 justify-content-end align-items-center">
           <span>Don&apos;t have an account yet?</span>
 
           <button
@@ -54,7 +55,10 @@ function Login() {
           >
             Signup
           </button>
+
+          <Language />
         </div>
+
         <div className="greeting text-center fs-3">Long Nhat</div>
         <div className="welcome text-center mt-2 mb-4">
           Hello, who&apos;s this?

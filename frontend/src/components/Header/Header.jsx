@@ -10,7 +10,10 @@ import { logoutUser } from "../../services/apiService";
 import { logout } from "../../store/slices/userSlice";
 import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
+import Language from "./Language";
+import { useTranslation } from "react-i18next";
 const Header = () => {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const isAuthenticated = useSelector(
     (state) => state.user?.userInfo?.DT?.access_token
@@ -49,13 +52,13 @@ const Header = () => {
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
             <NavLink className="nav-link" to="/">
-              Home
+              {t("header.home")}
             </NavLink>
             <NavLink className="nav-link" to="/users">
-              Users
+              {t("header.users")}
             </NavLink>
             <NavLink className="nav-link" to="/admins">
-              Admin
+              {t("header.admin")}
             </NavLink>
           </Nav>
           <Nav>
@@ -86,6 +89,7 @@ const Header = () => {
                 </button>
               </>
             )}
+            <Language />
           </Nav>
         </Navbar.Collapse>
       </Container>

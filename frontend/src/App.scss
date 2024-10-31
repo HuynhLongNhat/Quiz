@@ -6,6 +6,12 @@ body {
   padding: 0;
   box-sizing: border-box;
 }
+.language{
+
+  .dropdown-toggle::after {
+    display: none;
+  }
+}
 
 @media (min-width: 1350px) {
   .container,

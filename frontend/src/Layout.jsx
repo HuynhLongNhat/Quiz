@@ -18,10 +18,10 @@ import Notfound from "./components/NotFound/Notfound.jsx";
 import ManageQuiz from "./components/Admin/Auth/Quiz/ManageQuiz.jsx";
 import ManageQuestion from "./components/Admin/Auth/Quiz/ManageQuestion.jsx";
 import PrivateRoute from "./routes/PrivateRoute.jsx";
-
+import { Suspense } from "react";
 const Layout = () => {
   return (
-    <div>
+    <Suspense fallback={<di>Loading...</di>}>
       <Routes>
         <Route path="/" element={<App />}>
           <Route index element={<HomePage />} />
@@ -64,7 +64,7 @@ const Layout = () => {
         pauseOnHover
         theme="light"
       />
-    </div>
+    </Suspense>
   );
 };
 
