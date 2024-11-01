@@ -114,3 +114,7 @@ export const postUpsertQA = (data) => {
 export const logoutUser = (email, refresh_token) => {
   return axiosCutomize.post(`/logout`, { email, refresh_token });
 };
+
+export const getOverview = () => {
+  return axiosCutomize.get("/overview");
+};

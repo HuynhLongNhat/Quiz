@@ -7,7 +7,7 @@ i18n
   .use(LanguageDetector)
   .use(initReactI18next)
   .init({
-    debugger: true,
+    debugger: false,
     lng: "vi", // Ngôn ngữ mặc định
     fallbackLng: "en", // Ngôn ngữ dự phòng
     interpolation: {

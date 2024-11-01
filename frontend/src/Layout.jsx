@@ -21,7 +21,7 @@ import PrivateRoute from "./routes/PrivateRoute.jsx";
 import { Suspense } from "react";
 const Layout = () => {
   return (
-    <Suspense fallback={<di>Loading...</di>}>
+    <Suspense fallback={<div>Loading...</div>}>
       <Routes>
         <Route path="/" element={<App />}>
           <Route index element={<HomePage />} />
