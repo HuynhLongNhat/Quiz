@@ -1,0 +1,27 @@
+.dashboard-container {
+    .content {
+        display: flex;
+
+        .c-left {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            width: 50%;
+            border: 1px solid red;
+            .child {
+                width: calc(50% - 10px);
+                height: 150px;
+                border: 1px solid gray;             
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+        }
+
+        .c-right {
+            width: 50%;
+            border: 1px solid red;
+            height: 300px;
+        }
+    }
+}

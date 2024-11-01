@@ -62,13 +62,14 @@ const Header = () => {
             </NavLink>
           </Nav>
           <Nav>
+            <Language />
             {isAuthenticated ? (
               <>
                 <NavDropdown title="Setting" id="basic-nav-dropdown">
+                  <NavDropdown.Item>Profile</NavDropdown.Item>
                   <NavDropdown.Item onClick={() => handleLogout()}>
                     Logout
                   </NavDropdown.Item>
-                  <NavDropdown.Item>Profile</NavDropdown.Item>
                 </NavDropdown>
               </>
             ) : (
@@ -89,7 +90,6 @@ const Header = () => {
                 </button>
               </>
             )}
-            <Language />
           </Nav>
         </Navbar.Collapse>
       </Container>
